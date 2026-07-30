@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<KNX xmlns:op="http://github.com/OpenKNX/OpenKNXproducer" xmlns="http://knx.org/xml/project/20" CreatedBy="KNX MT" ToolVersion="5.1.255.16695">
+
+
+
+  <ManufacturerData>
+    <Manufacturer>
+      <ApplicationPrograms>
+        <ApplicationProgram>
+          <Static>
+            <ParameterTypes>
+              <ParameterType Id="%AID%_PT-MBUSMode" Name="MBUSMode">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Kombimodus (T1+C1B)" Value="0" Id="%ENID%" />
+                  <Enumeration Text="T1" Value="1" Id="%ENID%" />
+                  <Enumeration Text="C1A" Value="2" Id="%ENID%" />
+                  <Enumeration Text="C1B" Value="3" Id="%ENID%" />
+                  <Enumeration Text="S1" Value="4" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSGain" Name="MBUSGain">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Hoch (beste Empfindlichkeit)" Value="0" Id="%ENID%" />
+                  <Enumeration Text="Mittel" Value="1" Id="%ENID%" />
+                  <Enumeration Text="Niedrig" Value="2" Id="%ENID%" />
+                  <Enumeration Text="Minimal" Value="3" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSBandwidth" Name="MBUSBandwidth">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Breit (325 kHz, tolerant)" Value="0" Id="%ENID%" />
+                  <Enumeration Text="Mittel (203 kHz)" Value="1" Id="%ENID%" />
+                  <Enumeration Text="Schmal (135 kHz, störarm)" Value="2" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSPqt" Name="MBUSPqt">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Kein Filter (Standardwert)" Value="0" Id="%ENID%" />
+                  <Enumeration Text="Sehr leicht" Value="1" Id="%ENID%" />
+                  <Enumeration Text="Leicht" Value="2" Id="%ENID%" />
+                  <Enumeration Text="Leicht/Mittel" Value="3" Id="%ENID%" />
+                  <Enumeration Text="Mittel (empfohlen bei Störungen)" Value="4" Id="%ENID%" />
+                  <Enumeration Text="Mittel/Stark" Value="5" Id="%ENID%" />
+                  <Enumeration Text="Stark" Value="6" Id="%ENID%" />
+                  <Enumeration Text="Sehr stark (nur saubere Telegramme)" Value="7" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSHeatTempMode" Name="MBUSHeatTempMode">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Keine Temperaturen" Value="0" Id="%ENID%" />
+                  <Enumeration Text="Vor- und Rücklauftemperatur" Value="1" Id="%ENID%" />
+                  <Enumeration Text="Vorlauf und Temperaturdifferenz" Value="2" Id="%ENID%" />
+                  <Enumeration Text="Nur Temperaturdifferenz" Value="3" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSMeterType" Name="MBUSMeterType">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Deaktiviert" Value="0" Id="%ENID%" />
+                  <Enumeration Text="Wasserzähler" Value="1" Id="%ENID%" />
+                  <Enumeration Text="Wärmemengenzähler" Value="2" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSMeterTypeSelect" Name="MBUSMeterTypeSelect">
+                <TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+                  <Enumeration Text="Wasserzähler" Value="1" Id="%ENID%" />
+                  <Enumeration Text="Wärmemengenzähler" Value="2" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSMeterId" Name="MBUSMeterId">
+                <TypeText SizeInBit="72" Pattern="[0-9]{8}" />
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-MBUSAesKey" Name="MBUSAesKey">
+                <TypeText SizeInBit="264" Pattern="([0-9A-Fa-f]{32})?" />
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-SLEDFunc" Name="SLEDFunc">
+                <TypeRestriction Base="Value" SizeInBit="16" UIHint="DropDown">
+                  <Enumeration Text="WMBus Gesamtstatus" Value="220" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%00002" Name="Mode" Offset="0" BitOffset="0" ParameterType="%AID%_PT-MBUSMode" Text="Empfangsmodus" Value="0" />
+              </Union>
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="2" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%00003" Name="Gain" Offset="0" BitOffset="0" ParameterType="%AID%_PT-MBUSGain" Text="Empfangsverstärkung (Gain)" Value="0" />
+              </Union>
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%00004" Name="Bandwidth" Offset="0" BitOffset="0" ParameterType="%AID%_PT-MBUSBandwidth" Text="Kanalbandbreite" Value="0" />
+              </Union>
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%00005" Name="Pqt" Offset="0" BitOffset="0" ParameterType="%AID%_PT-MBUSPqt" Text="Präambel-Qualitätsschwelle (PQT)" Value="0" />
+              </Union>
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef Id="%AID%_UP-%TT%00002_R-%TT%0000201" RefId="%AID%_UP-%TT%00002" />
+              <ParameterRef Id="%AID%_UP-%TT%00003_R-%TT%0000301" RefId="%AID%_UP-%TT%00003" />
+              <ParameterRef Id="%AID%_UP-%TT%00004_R-%TT%0000401" RefId="%AID%_UP-%TT%00004" />
+              <ParameterRef Id="%AID%_UP-%TT%00005_R-%TT%0000501" RefId="%AID%_UP-%TT%00005" />
+            </ParameterRefs>
+            <ComObjectTable>
+            </ComObjectTable>
+            <ComObjectRefs>
+            </ComObjectRefs>
+          </Static>
+          <Dynamic>
+            <Channel Id="%AID%_CH-%PREFIX%" Number="%PREFIX%" Name="Main" Text="Wireless MBus" HelpContext="MBUS-Dokumentation" Icon="gauge">
+              <ParameterBlock Id="%AID%_PB-nnn" Name="Basic" Text="Allgemein" Icon="cog-outline" HelpContext="MBUS-Dokumentation">
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Wireless MBus" UIHint="Headline" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Version: %ModuleVersion%" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Funkempfänger" UIHint="Headline" />
+                <ParameterRefRef RefId="%AID%_UP-%TT%00002_R-%TT%0000201" HelpContext="MBUS-Mode" IndentLevel="1" />
+                <ParameterRefRef RefId="%AID%_UP-%TT%00003_R-%TT%0000301" HelpContext="MBUS-Gain" IndentLevel="1" />
+                <ParameterRefRef RefId="%AID%_UP-%TT%00004_R-%TT%0000401" HelpContext="MBUS-Bandwidth" IndentLevel="1" />
+                <ParameterRefRef RefId="%AID%_UP-%TT%00005_R-%TT%0000501" HelpContext="MBUS-Pqt" IndentLevel="1" />
+              </ParameterBlock>
+              <ParameterBlock Id="%AID%_PB-nnn" Name="MBUSKanalauswahl" Text="Kanalauswahl" Icon="format-list-bulleted-type" HelpContext="BASE-ChannelSelect">
+                <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                  <Rows>
+                    <Row Id="%AID%_PB-nnn_R-1" />
+                  </Rows>
+                  <Columns>
+                    <Column Id="%AID%_PB-nnn_C-1" Width="13%" />
+                    <Column Id="%AID%_PB-nnn_C-2" Width="30%" />
+                    <Column Id="%AID%_PB-nnn_C-3" Width="57%" />
+                  </Columns>
+                  <ParameterSeparator Id="%AID%_PS-nnn" Cell="1,1" UIHint="Headline" Text="Kanal" />
+                  <ParameterSeparator Id="%AID%_PS-nnn" Cell="1,2" UIHint="Headline" Text="Zählertyp" />
+                  <ParameterSeparator Id="%AID%_PS-nnn" Cell="1,3" UIHint="Headline" Text="Beschreibung" />
+                </ParameterBlock>
+                <op:include href="WirelessMBusModule.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/ParameterBlock[@Name='Settings']/*" type="template" prefix="MBUS" IsInner="true" />
+              </ParameterBlock>
+
+              <op:include href="WirelessMBusModule.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/ParameterBlock[@Name='Channel']/*" type="template" prefix="MBUS" IsInner="true" />
+            </Channel>
+          </Dynamic>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+      <Baggages>
+        <Baggage TargetPath="" Name="Help_de.zip" Id="%FILE-HELP-de%">
+          <FileInfo TimeInfo="%DATETIME%" />
+        </Baggage>
+        <Baggage TargetPath="" Name="Icons.zip" Id="%FILE-ICONS%">
+          <FileInfo TimeInfo="%DATETIME%" />
+        </Baggage>
+      </Baggages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>
