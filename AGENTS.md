@@ -4,6 +4,13 @@
 
 Dieses Modul empfängt Wireless M-Bus Telegramme (Wasser- und Wärmemengenzähler) über ein CC1101-Funkmodul und sendet die Messwerte auf den KNX-Bus.
 
+## Basis: OGM-Common
+
+Dieses OFM baut auf `../OGM-Common/AGENTS.md` auf (Modulsystem, LED-/
+Flash-/Zeit-API, Logging, Embedded-Rahmenbedingungen, Code-Konventionen)
+— dort beschriebene Regeln und vorhandene Claude-Skills/Agents (z. B.
+das Kanalauswahl-Muster) gelten auch hier.
+
 ## Prefix und Namenskonventionen
 
 - **Modulprefix**: `MBUS`
@@ -78,3 +85,9 @@ Intern wird sie mit `wmbus.setKey(meterId, keyBytes)` und für das Frame-Routing
 - Jede verwendete `HelpContext`-Id muss in der Applikationsbeschreibung als `<!-- DOC HelpContext="MBUS-..." -->` dokumentiert sein
 - Baggages werden über VS Code Task "OpenKNXproducer Documentation" erzeugt (`.vscode/tasks.json`)
 - Deutsche Texte mit echten Umlauten (ä, ö, ü, ß) schreiben
+
+## Referenzen
+
+- [README.md](README.md) — Funktionsüberblick, Status-LEDs, Konsolenbefehle
+- [doc/Applikationsbeschreibung-WirelessMBus.md](doc/Applikationsbeschreibung-WirelessMBus.md) — Funkparameter im Detail
+- [CHANGELOG.md](CHANGELOG.md) — Versionshistorie
