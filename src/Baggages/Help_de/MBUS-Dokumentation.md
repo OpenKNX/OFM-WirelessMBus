@@ -1,4 +1,5 @@
-﻿### Wireless MBus
+﻿### Dokumentation
+
 
 Das Modul empfängt Wireless M-Bus Telegramme (wMBus) von Zählern über ein CC1101-Funkmodul und sendet die Messwerte auf den KNX-Bus. Unterstützt werden Wasserzähler (warm und kalt) sowie Wärmemengenzähler.
 
