@@ -1,7 +1,6 @@
-# Applikationsbeschreibung Wireless MBus
+# **Applikationsbeschreibung Wireless MBus**
 
 <!-- DOC HelpContext="Dokumentation" -->
-## Wireless MBus
 
 Das Modul empfängt Wireless M-Bus Telegramme (wMBus) von Zählern über ein CC1101-Funkmodul und sendet die Messwerte auf den KNX-Bus. Unterstützt werden Wasserzähler (warm und kalt) sowie Wärmemengenzähler.
 
@@ -22,8 +21,12 @@ Die Funkparameter (Empfangsmodus, Verstärkung, Bandbreite, Präambel-Qualitäts
 - **wmbus debug** – schaltet eine fortlaufende Anzeige aller empfangenen Rohtelegramme ein bzw. aus.
 - **wmbus stats** – zeigt Kennzahlen zur Funkqualität (erkannte Sync-Words, verarbeitete Telegramme, verworfene Frames).
 
+## **Allgemein**
+
+Auf dieser Seite sieht man die in der Applikation verwendete Modulversion.
+
 <!-- DOC HelpContext="Mode" -->
-### Empfangsmodus
+### **Empfangsmodus**
 
 Legt fest, auf welchem Funkprotokoll und in welchem Format der Empfänger lauscht:
 
@@ -34,7 +37,7 @@ Legt fest, auf welchem Funkprotokoll und in welchem Format der Empfänger lausch
 - **S1** – Manchester-Kodierung, längere Preamble
 
 <!-- DOC HelpContext="Gain" -->
-### Empfangsverstärkung (Gain)
+### **Empfangsverstärkung (Gain)**
 
 Steuert den Vorverstärker (LNA) des CC1101:
 
@@ -44,7 +47,7 @@ Steuert den Vorverstärker (LNA) des CC1101:
 - **Minimal** – Minimale Verstärkung (kurze Reichweite, störarme Umgebung)
 
 <!-- DOC HelpContext="Bandwidth" -->
-### Kanalbandbreite
+### **Kanalbandbreite**
 
 Legt die Empfangsbandbreite des CC1101 fest:
 
@@ -53,7 +56,7 @@ Legt die Empfangsbandbreite des CC1101 fest:
 - **Schmal (135 kHz)** – Filtert Nachbarkanal-Störungen, erfordert stabile Frequenz
 
 <!-- DOC HelpContext="Pqt" -->
-### Präambel-Qualitätsschwelle (PQT)
+### **Präambel-Qualitätsschwelle (PQT)**
 
 Legt fest, wie viele gültige Preamble-Übergänge (0xAA-Bits) der CC1101 mindestens zählen muss, bevor er ein Sync-Word als gültig akzeptiert. Höhere Werte filtern Falschauslöser durch Rauschen, können aber echte Telegramme mit kurzer Preamble unterdrücken.
 
@@ -63,7 +66,7 @@ Legt fest, wie viele gültige Preamble-Übergänge (0xAA-Bits) der CC1101 mindes
 - **7** – Strenger Filter: Nur Frames mit langer, sauberer Preamble werden angenommen
 
 <!-- DOC HelpContext="Zaehlertyp" -->
-### Zählertyp
+### **Zählertyp**
 
 Wählt aus, welcher Messwert-Satz für diesen Kanal erwartet wird. Muss zuerst konfiguriert werden – alle weiteren Parameter und Kommunikationsobjekte sind nur bei aktivem Typ sichtbar.
 
@@ -72,7 +75,7 @@ Wählt aus, welcher Messwert-Satz für diesen Kanal erwartet wird. Muss zuerst k
 - **Wärmemengenzähler** – Energie (kWh), Durchfluss (m³/h), Vorlauf-/Rücklauftemperatur, Leistung (W), Temperaturdifferenz (K)
 
 <!-- DOC HelpContext="HeatTempMode" -->
-### Temperaturen senden (Wärmemengenzähler)
+### **Temperaturen senden (Wärmemengenzähler)**
 
 Legt fest, welche Temperaturwerte auf den KNX-Bus übertragen werden:
 
@@ -83,25 +86,30 @@ Legt fest, welche Temperaturwerte auf den KNX-Bus übertragen werden:
 
 Rücklauftemperatur und Temperaturdifferenz schließen sich gegenseitig aus, da viele Zähler nur eine der beiden Größen senden.
 
+### **MQTT**
+
+Ist im Netzwerkmodul MQTT aktiviert, veröffentlicht jeder Kanal automatisch pro empfangenem Telegramm ein JSON-Objekt mit allen darin enthaltenen Messwerten (z. B. `volume`, `volume_flow`, `power`, `flow_temp`, `return_temp`, `temp_diff`, je nach Zählertyp) unter dem Topic `openknx/<geräte-prefix>/wmbus/<meter-id-hex>`. Es gibt dafür keinen eigenen ETS-Parameter — die Veröffentlichung folgt automatisch der globalen MQTT-Einstellung im Netzwerkmodul. Gesendet wird ohne Retain-Flag, da die Nachricht keinen Zeitstempel enthält und ein beim nächsten Abonnenten-Connect ausgelieferter, zwischengespeicherter alter Wert irreführend wäre.
+
+
 <!-- DOC HelpContext="MeterId" -->
-### Meter-ID
+### **Meter-ID**
 
 Die eindeutige Gerätenummer des Zählers als **dezimale** Zahl. Die Meter-ID steht auf dem Zählergehäuse oder kann mit einem wMBus-Scanner ausgelesen werden. Sie wird verwendet, um eingehende Telegramme dem richtigen Kanal zuzuordnen.
 
 <!-- DOC HelpContext="AesKey" -->
-### AES-Schlüssel
+### **AES-Schlüssel**
 
 Optionaler AES-128-Schlüssel für verschlüsselte Telegramme, einzugeben als **32 Hexadezimalzeichen** (z. B. `00112233445566778899AABBCCDDEEFF`). Wenn das Feld leer bleibt, wird keine Entschlüsselung versucht.
 
 Das Status-KO zeigt an, ob die Entschlüsselung erfolgreich war.
 
 <!-- DOC HelpContext="SendOnlyIfChanged" -->
-### Nur senden bei Änderung
+### **Nur senden bei Änderung**
 
 Wenn aktiv, wird ein Telegramm nur dann auf den KNX-Bus gesendet, wenn sich der Messwert gegenüber dem zuletzt gesendeten Wert tatsächlich geändert hat. Alle Messwerte werden unabhängig davon stets im KNX-Buffer aktualisiert, sodass Read-Requests jederzeit beantwortet werden.
 
 <!-- DOC HelpContext="MinInterval" -->
-### Mindestwartezeit
+### **Mindestwartezeit**
 
 Legt fest, wie viel Zeit mindestens zwischen zwei gesendeten Telegrammen vergehen muss. Trifft ein neuer Messwert ein, bevor die Wartezeit abgelaufen ist, wird er zwar im Buffer gespeichert, aber nicht gesendet.
 
@@ -110,7 +118,7 @@ Legt fest, wie viel Zeit mindestens zwischen zwei gesendeten Telegrammen vergehe
 Die Zeit besteht aus zwei Parametern: Zeitwert (Zahl) und Zeitbasis (Sekunden / Minuten).
 
 <!-- DOC HelpContext="Watchdog" -->
-### Zählerüberwachung
+### **Zählerüberwachung**
 
 Legt fest, nach welcher Zeit ohne gültiges Telegramm das Status-KO auf **Inaktiv** wechselt.
 

@@ -1,5 +1,9 @@
 #include "MBusChannel.h"
 #include "MBusModule.h"
+#include "NetworkModule.h"
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+#include "OpenKNX/Format/JSON/Writer.h"
+#endif
 
 #ifdef WMBUS_SPI
 
@@ -150,6 +154,19 @@ void MBusChannel::processFrame(const WMBus::Frame &frame, const WMBus::DataRecor
         return;
     }
 
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+    // Ein JSON-Snapshot pro Telegramm, damit alle Werte zeitlich konsistent sind
+    // (kein Retain: ohne Zeitstempel im Payload wäre ein zwischengespeicherter,
+    // veralteter Wert beim nächsten Subscriber-Connect irreführend).
+    OpenKNX::Format::JSON::Writer mqttJson;
+    mqttJson.beginObject();
+    bool mqttHasData = false;
+    auto mqttAppend = [&](const char *key, float value) {
+        mqttJson.field(key, value, 3);
+        mqttHasData = true;
+    };
+#endif
+
     for (uint8_t i = 0; i < count; i++)
     {
         const WMBus::DataRecord &r = records[i];
@@ -162,30 +179,85 @@ void MBusChannel::processFrame(const WMBus::Frame &frame, const WMBus::DataRecor
         {
             // Wasserzähler
             if (r.quantity == WMBus::Quantity::Volume)
+            {
                 sendValue1(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("volume", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::VolumeFlow)
+            {
                 sendValue2(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("volume_flow", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::FlowTemperature)
+            {
                 sendTemp1(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("flow_temp", val);
+#endif
+            }
         }
         else if (_meterType == 2)
         {
             // Wärmemengenzähler
             uint8_t tempMode = ParamMBUS_ChHeatTempMode;
             if (r.quantity == WMBus::Quantity::Energy)
+            {
                 sendValue1(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("energy", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::VolumeFlow)
+            {
                 sendValue2(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("volume_flow", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::Power)
+            {
                 sendPower(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("power", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::FlowTemperature && (tempMode == 1 || tempMode == 2))
+            {
                 sendTemp1(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("flow_temp", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::ReturnTemperature && tempMode == 1)
+            {
                 sendTemp2(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("return_temp", val);
+#endif
+            }
             else if (r.quantity == WMBus::Quantity::TemperatureDifference && (tempMode == 2 || tempMode == 3))
+            {
                 sendTempDiff(val);
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+                mqttAppend("temp_diff", val);
+#endif
+            }
         }
     }
+
+#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
+    if (mqttHasData && openknxNetwork.mqtt.connected())
+    {
+        mqttJson.endObject();
+        char topic[24];
+        snprintf(topic, sizeof(topic), "wmbus/%08X", (unsigned int)_meterId);
+        openknxNetwork.mqtt.publishP(topic, mqttJson.str(), /*qos=*/0, /*retain=*/false);
+    }
+#endif
 }
 
 bool MBusChannel::intervalAllows(uint32_t &lastTime)
