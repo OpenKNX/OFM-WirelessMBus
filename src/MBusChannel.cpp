@@ -206,9 +206,10 @@ void MBusChannel::processFrame(const WMBus::Frame &frame, const WMBus::DataRecor
             uint8_t tempMode = ParamMBUS_ChHeatTempMode;
             if (r.quantity == WMBus::Quantity::Energy)
             {
-                sendValue1(val);
+                float energyKWh = val / 1000.0f;
+                sendValue1(energyKWh);
 #if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)
-                mqttAppend("energy", val);
+                mqttAppend("energy", energyKWh);
 #endif
             }
             else if (r.quantity == WMBus::Quantity::VolumeFlow)
