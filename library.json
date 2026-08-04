@@ -2,7 +2,7 @@
   "name": "OFM-WirelessMBus",
   "version": "0.1.0",
   "dependencies": {
-    "wmbus": "https://github.com/traxanos/wmbus.git"
+    "wmbus": "https://github.com/traxanos/wmbus.git#v0.1.2"
   },
   "description": "OpenKNX module for receiving wireless M-Bus meters (water, heat) via CC1101.",
   "homepage": "https://openknx.de",
