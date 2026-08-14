@@ -11,5 +11,8 @@
   eigenem Status-Objekt.
 - Status-LEDs für Modul und Kanäle nach dem einheitlichen
   OpenKNX-Zustandsmodell.
+- MQTT: pro empfangenem Telegramm ein JSON-Objekt mit allen darin
+  enthaltenen Messwerten, ohne eigenen ETS-Parameter — die
+  Veröffentlichung folgt der globalen MQTT-Einstellung im Netzwerkmodul.
 - Konsolenbefehle `wmbus debug`, `wmbus stats` und `wmbus list` für die
   Inbetriebnahme.

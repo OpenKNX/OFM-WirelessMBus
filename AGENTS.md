@@ -60,9 +60,17 @@ KO-Slots werden typ-übergreifend wiederverwendet (spart KOs):
 - KO 3: Vorlauftemperatur
 - KO 4: Rücklauftemperatur (nur Typ 2)
 
+## MQTT
+
+Pro empfangenem Telegramm veröffentlicht jeder Kanal einen JSON-Snapshot mit allen darin enthaltenen Messwerten unter `wmbus/<meter-id-hex>` — bewusst ein Objekt statt einer Nachricht pro Wert, damit Abonnenten einen zeitlich konsistenten Stand sehen. Kein Retain, weil der Payload keinen Zeitstempel enthält.
+
+- Ein **eigener ETS-Parameter existiert nicht** — die Veröffentlichung folgt der globalen MQTT-Einstellung des Netzwerkmoduls.
+- Der ganze Zweig hängt an `#if (defined(KNX_IP_WIFI) || defined(KNX_IP_LAN)) && defined(OPENKNX_MQTT)` und liegt komplett in `MBusChannel::processFrame()`: `Writer` plus `mqttAppend`-Lambda lokal, Publish am Ende derselben Funktion. Anders als in OFM-SML also kein Member — bei einem Telegramm alle paar Minuten ist der Stack-`Writer` billiger als ein dauerhaft gehaltener Puffer je Kanal.
+- Neue Messwerte gehören genau dorthin, wo auch das zugehörige KO geschrieben wird, damit KO und Snapshot nicht auseinanderlaufen.
+
 ## Regeln für Weiterentwicklung
 
-1. Neue Zählertypen bekommen einen eigenen `case`-Zweig in `MBusChannel::processFrame()`.
+1. Neue Zählertypen bekommen einen eigenen `case`-Zweig in `MBusChannel::processFrame()` — inkl. `mqttAppend()` für die neuen Messwerte.
 2. Keine Typunterscheidung außerhalb von `MBusChannel`.
 3. `MBusModule` verwaltet nur Radio, Receiver und das Channel-Array.
 4. AES-Keys werden einmalig in `MBusModule::setup()` für alle konfigurierten Kanäle via `_wmbus.setKey()` registriert.
